@@ -1,18 +1,21 @@
 {
   "name": "chai-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "api assertion library",
   "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:hankchiutw/chai-api.git"
   },
-  "scripts": {
-  },
+  "scripts": {},
   "keywords": [
     "api",
     "chai"
   ],
   "author": "Hank",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^3.5.0",
+    "request-promise": "^2.0.1"
+  }
 }
