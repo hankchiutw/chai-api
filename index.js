@@ -18,6 +18,7 @@ module.exports = function(url){
  * @params {Object} req
  * @params {Object} req.headers Normally used to set authorization header
  * @params {Object} req.body
+ * @params {Object} req.qs
  * @return {Object} Response body
  */
 function *api(method, path, req){
@@ -30,6 +31,7 @@ function *api(method, path, req){
     };
     if(req && req.headers) options.headers = req.headers;
     if(req && req.body) options.body = req.body;
+    if(req && req.qs) options.qs = req.qs;
 
     return yield rp(options);
 }
@@ -52,6 +54,7 @@ Object.defineProperty(api, 'notSuccess', { value: apiNotSuccess });
  * @params {Object} req
  * @params {Object} req.headers
  * @params {Object} req.body
+ * @params {Object} req.qs
  * @return {Object} result object
  */
 function *apiSuccess(method, path, req){
@@ -77,6 +80,7 @@ function *apiSuccess(method, path, req){
  * @params {Object} req
  * @params {Object} req.headers
  * @params {Object} req.body
+ * @params {Object} req.qs
  * @return {Object} With attributes errorMessage, errorData, errorCode
  */
 function *apiNotSuccess(method, path, req){
