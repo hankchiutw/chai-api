@@ -3,41 +3,41 @@
 const assert = require('chai').assert;
 const rp = require('request-promise');
 
-let apiUrl;
-
-module.exports = function(url){
-    apiUrl = url;
-    return api;
-
-};
-
 /**
- * Request api path
- * @params {String} method HTTP verb
- * @params {String} path
- * @params {Object} req
- * @params {Object} req.headers Normally used to set authorization header
- * @params {Object} req.body
- * @params {Object} req.qs
- * @return {Object} Response body
+ * Factory
  */
-function *api(method, path, req){
+module.exports = function(apiUrl){
     assert.isOk(apiUrl, 'apiUrl should be defined');
 
-    const options = {
-        json: true,
-        method,
-        uri: `${apiUrl}${path}`
-    };
-    if(req && req.headers) options.headers = req.headers;
-    if(req && req.body) options.body = req.body;
-    if(req && req.qs) options.qs = req.qs;
+    return api;
 
-    return yield rp(options);
-}
-Object.defineProperty(api, 'success', { value: apiSuccess });
-Object.defineProperty(api, 'notSuccess', { value: apiNotSuccess });
+    /**
+     * Request api path
+     * @params {String} method HTTP verb
+     * @params {String} path
+     * @params {Object} req
+     * @params {Object} req.headers Normally used to set authorization header
+     * @params {Object} req.body
+     * @params {Object} req.qs
+     * @return {Object} Response body
+     */
+    function *api(method, path, req){
 
+        const options = {
+            json: true,
+            method,
+            uri: `${apiUrl}${path}`
+        };
+        if(req && req.headers) options.headers = req.headers;
+        if(req && req.body) options.body = req.body;
+        if(req && req.qs) options.qs = req.qs;
+
+        return yield rp(options);
+    }
+    Object.defineProperty(api, 'success', { value: apiSuccess });
+    Object.defineProperty(api, 'notSuccess', { value: apiNotSuccess });
+
+};
 
 /**
  * Request api path and expect to have isSuccess=true
@@ -58,6 +58,7 @@ Object.defineProperty(api, 'notSuccess', { value: apiNotSuccess });
  * @return {Object} result object
  */
 function *apiSuccess(method, path, req){
+    const api = this;
     const ret = yield api(method, path, req);
 
     assert.isOk(ret.result.isSuccess, 'api return isSuccess = true');
@@ -84,6 +85,7 @@ function *apiSuccess(method, path, req){
  * @return {Object} With attributes errorMessage, errorData, errorCode
  */
 function *apiNotSuccess(method, path, req){
+    const api = this;
     const ret = yield api(method, path, req);
 
     assert.isNotOk(ret.result.isSuccess, 'api return isSuccess = false');
